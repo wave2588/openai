@@ -3,8 +3,8 @@ package openai
 import (
 	"time"
 
-	"github.com/xxjwxc/openai/chatgpt"
-	"github.com/xxjwxc/openai/dalle"
+	"github.com/wave2588/openai/chatgpt"
+	"github.com/wave2588/openai/dalle"
 )
 
 // NewChatGPT 新建一个chartgpt
