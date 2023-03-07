@@ -91,3 +91,32 @@ func (c *ChatGPT) Chat(question string) (answer string, err error) {
 	}
 	return formatAnswer(resp.Choices[0].Text), err
 }
+
+func (c *ChatGPT) ChatV2(ctx context.Context, question string) (answer string, err error) {
+	question = question + "."
+	if len(question) > c.maxQuestionLen {
+		return "", OverMaxQuestionLength
+	}
+	if len(question)+c.maxAnswerLen > c.maxText {
+		question = question[:c.maxText-c.maxAnswerLen]
+	}
+
+	req := gogpt.ChatCompletionRequest{
+		Model:       gogpt.GPT3Dot5Turbo,
+		MaxTokens:   200,
+		Temperature: 0.7,
+		TopP:        1,
+		Messages: []gogpt.ChatCompletionMessage{
+			{
+				Role:    "user",
+				Content: question,
+			},
+		},
+	}
+
+	resp, err := c.client.CreateChatCompletion(ctx, req)
+	if err != nil {
+		return "", err
+	}
+	return formatAnswer(resp.Choices[0].Message.Content), err
+}
